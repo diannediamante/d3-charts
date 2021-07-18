@@ -29,7 +29,7 @@ function App() {
       .clamp(true)
     
     //create x-axis
-      const xAxis = axisBottom(xScale)
+    const xAxis = axisBottom(xScale)
                       .ticks(data.length) // .tickFormat(index => index + 1);
 
     svg
@@ -47,8 +47,8 @@ function App() {
 
 
     // draw the bars
-    svg
-      .selectAll(".bar")
+    // console.log(data)
+    svg.selectAll(".bar")
       .data(data)
       .join("rect")
       .attr("class", "bar")
@@ -56,15 +56,22 @@ function App() {
       .attr("x", (value, index) => xScale(index)) //index refers to data "data"
       .attr("y", -150)                
       .attr("width", xScale.bandwidth())      //bandwidth = width of each bar
-      .on("mouseenter", (value, index) => {
-        svg
-          .selectAll(".tooltip")
+      .on("mouseenter", (event, value) => {
+        console.log(value)
+        const index = svg.selectAll(".bar").nodes().indexOf(event.target);
+        svg.selectAll(".tooltip")
           .data([value])
-          .join("text")
+          .join(enter => enter.append("text").attr("y", yScale(value) - 4))
           .attr("class", "tooltip")
           .text(value)
-          // .attr("x", xScale(index)); //index refers to data "[value]"
+          .attr("x", xScale(index) + xScale.bandwidth() / 2) 
+          
+          .attr("text-anchor", "middle")
+          .transition()
+          .attr("y", yScale(value) - 8)
+          .attr("opacity", 1)
       })
+      .on("mouseleave", () => svg.select(".tooltip").remove())
       .transition()
       .attr("fill", colorScale)
       .attr("height", value => 150 - yScale(value))                     //height = height of svg - actual height
