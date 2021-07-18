@@ -3,22 +3,22 @@ import './App.css';
 import { select } from 'd3';
 
 
-// const data = [10, 20, 30, 45, 100, 30]
+// const dats = [5, 25, 35, 15, 50, 11]
 
 function App() {
 
-  const [data, setData] = useState ([10, 20, 30, 45, 100, 30])  //dynamic data
+  const [data, setData] = useState ([10, 20, 30, 45, 100, 60])  //dynamic data
   const svgRef = useRef();
 
+  //called once when DOM elements is rendered
   useEffect(() => {
-    //called once when DOM elements is rendered
     console.log(svgRef);
     const svg = select(svgRef.current);
 
     //select all the circles find in svg then sync with data
     svg.selectAll("circle")
       .data(data)
-      .join("circle")
+      .join("circle")                   //enter, update, exit
       .attr("r", value => value)        //radius
       .attr("cx", value => value * 2)
       .attr("cy", value => value * 2)
