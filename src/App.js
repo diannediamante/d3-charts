@@ -17,6 +17,7 @@ function App() {
     const xScale = scaleBand()
       .domain(data.map((value, index) => index))  //discrete, 0-0, 1-60..., should be explicit
       .range([0, 300])
+      .padding(0.5)
     
     const yScale = scaleLinear()
       .domain([0, 150])
@@ -45,7 +46,11 @@ function App() {
       .data(data)
       .join("rect")
       .attr("class", "bar")
-      
+      .attr("x", (value, index) => xScale(index))
+      .attr("y", yScale)                
+      .attr("width", xScale.bandwidth())      //bandwidth = width of each bar
+      .attr("height", value => 150 - yScale(value))                     //height = height of svg - actual height
+
 
 
 
