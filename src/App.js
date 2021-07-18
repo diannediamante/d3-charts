@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, Fragment } from 'react';
 import './App.css';
-import { select, line, curveCardinal } from 'd3';
+import { select, line, curveCardinal, axisBottom, scaleLinear } from 'd3';
 
 //line = for line elements
 
@@ -12,18 +12,37 @@ function App() {
 
   //called once when DOM elements is rendered
   useEffect(() => {
-    // console.log(svgRef);
     const svg = select(svgRef.current);
+
+    const xScale = scaleLinear()
+      .domain([0, data.length - 1])
+      .range([0, 300])
+    
+    const yScale = scaleLinear()
+      .domain([0, 150])
+      .range([150, 0])
+    
+    const xAxis = axisBottom(xScale);
+
+    svg.select(".x-axis")
+      .style("transform", "translateY(150px")
+      .call(xAxis);
+
+    // xAxis(svg.select(".x-axis"));
+
+
     const myLine = line()
-      .x((value, index) => index * 50)
-      .y(value => 150 - value)
-      .curve(curveCardinal)
+      .x((value, index) => xScale(index))
+      .y(yScale)
+      .curve(curveCardinal);
 
 
-    svg.selectAll("path")
+    svg
+      .selectAll(".line")
       .data([data])
       .join("path")
-      .attr("d", value => myLine(value))
+      .attr("class", "line")
+      .attr("d", myLine)
       .attr("fill", "none")
       .attr("stroke", "blue")
 
@@ -33,7 +52,9 @@ function App() {
 
   return (
     <Fragment>
-      <svg ref={svgRef}></svg>
+      <svg ref={svgRef}>
+        <g className="x-axis"></g>
+      </svg>
       <br/>
       <button onClick={()=> setData(data.map(value => value + 5))}>Update Data</button>
       <button onClick={()=> setData(data.filter(value => value < 35))}>Filter Data</button>
