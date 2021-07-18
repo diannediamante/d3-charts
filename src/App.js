@@ -74,9 +74,8 @@ function App() {
         <g className="x-axis"></g>
         <g className="y-axis"></g>
       </svg>
-      <br/><br/><br/>
+      <br/>
       <button onClick={()=> setData(data.map(value => value + 5))}>Update Data</button>
-      {/* <br/> */}
       <button onClick={()=> setData(data.filter(value => value < 35))}>Filter Data</button>
     </Fragment>
   );
