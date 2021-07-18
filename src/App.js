@@ -3,7 +3,6 @@ import './App.css';
 import { select } from 'd3';
 
 
-// const dats = [5, 25, 35, 15, 50, 11]
 
 function App() {
 
@@ -15,14 +14,7 @@ function App() {
     console.log(svgRef);
     const svg = select(svgRef.current);
 
-    //select all the circles find in svg then sync with data
-    svg.selectAll("circle")
-      .data(data)
-      .join("circle")                   //enter, update, exit
-      .attr("r", value => value)        //radius
-      .attr("cx", value => value * 2)
-      .attr("cy", value => value * 2)
-      .attr("stroke", "red");           //default fill color is black;
+
   }, [data]);
 
 
