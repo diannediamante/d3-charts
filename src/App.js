@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, Fragment } from 'react';
 import './App.css';
-import { select, line, curveCardinal, axisBottom, axisRight, scaleLinear } from 'd3';
+import { select, axisBottom, axisRight, scaleLinear, scaleBand } from 'd3';
 
 //line = for line elements
 
@@ -14,8 +14,8 @@ function App() {
   useEffect(() => {
     const svg = select(svgRef.current);
 
-    const xScale = scaleLinear()
-      .domain([0, data.length - 1])
+    const xScale = scaleBand()
+      .domain(data.map((value, index) => index))  //discrete, 0-0, 1-60..., should be explicit
       .range([0, 300])
     
     const yScale = scaleLinear()
@@ -24,35 +24,31 @@ function App() {
     
     const xAxis = axisBottom(xScale)
                     .ticks(data.length)
-                    .tickFormat(index => index + 1);
+                    // .tickFormat(index => index + 1);
 
-    svg.select(".x-axis")
+    svg
+      .select(".x-axis")
       .style("transform", "translateY(150px")
       .call(xAxis);
     
     const yAxis = axisRight(yScale)
 
-    svg.select(".y-axis")
+    svg
+      .select(".y-axis")
       .style("transform", "translateX(300px")
       .call(yAxis);
 
     // xAxis(svg.select(".x-axis"));
 
-
-    const myLine = line()
-      .x((value, index) => xScale(index))
-      .y(yScale)
-      .curve(curveCardinal);
-
-
     svg
-      .selectAll(".line")
-      .data([data])
-      .join("path")
-      .attr("class", "line")
-      .attr("d", myLine)
-      .attr("fill", "none")
-      .attr("stroke", "blue")
+      .selectAll(".bar")
+      .data(data)
+      .join("rect")
+      .attr("class", "bar")
+      
+
+
+
 
 
   }, [data]);
@@ -64,8 +60,9 @@ function App() {
         <g className="x-axis"></g>
         <g className="y-axis"></g>
       </svg>
-      <br/>
+      <br/><br/><br/>
       <button onClick={()=> setData(data.map(value => value + 5))}>Update Data</button>
+      {/* <br/> */}
       <button onClick={()=> setData(data.filter(value => value < 35))}>Filter Data</button>
     </Fragment>
   );
