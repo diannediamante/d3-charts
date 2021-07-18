@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, Fragment } from 'react';
 import './App.css';
-import { select, line } from 'd3';
+import { select, line, curveCardinal } from 'd3';
 
 //line = for line elements
 
@@ -16,7 +16,8 @@ function App() {
     const svg = select(svgRef.current);
     const myLine = line()
       .x((value, index) => index * 50)
-      .y(value => value)
+      .y(value => 150 - value)
+      .curve(curveCardinal)
 
 
     svg.selectAll("path")
@@ -32,11 +33,7 @@ function App() {
 
   return (
     <Fragment>
-      <svg ref={svgRef}>
-
-      {/* collection of dots */}
-        {/* <path d="M0, 100 150, 150 200, 120" stroke="blue" fill="none"/>  */}
-      </svg>
+      <svg ref={svgRef}></svg>
       <br/>
       <button onClick={()=> setData(data.map(value => value + 5))}>Update Data</button>
       <button onClick={()=> setData(data.filter(value => value < 35))}>Filter Data</button>
