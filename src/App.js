@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import './App.css';
+import { select } from 'd3';
 
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
   useEffect(() => {
     //called once when DOM elements is rendered
     console.log(svgRef);
+    const svg = select(svgRef.current);
   }, []);
 
   return (
