@@ -3,6 +3,7 @@ svg {
   overflow: visible;
   margin-bottom: 2rem;
   display: block;
+  width: 100%;
 }
 
 #root {
@@ -11,6 +12,7 @@ svg {
   align-items: center;
   justify-content: center;
   height: 100vh;
+  padding: 0 50px;
 }
 
 button {
