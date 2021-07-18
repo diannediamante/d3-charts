@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, Fragment } from 'react';
 import './App.css';
-import { select, line, curveCardinal, axisBottom, scaleLinear } from 'd3';
+import { select, line, curveCardinal, axisBottom, axisRight, scaleLinear } from 'd3';
 
 //line = for line elements
 
@@ -22,11 +22,19 @@ function App() {
       .domain([0, 150])
       .range([150, 0])
     
-    const xAxis = axisBottom(xScale);
+    const xAxis = axisBottom(xScale)
+                    .ticks(data.length)
+                    .tickFormat(index => index + 1);
 
     svg.select(".x-axis")
       .style("transform", "translateY(150px")
       .call(xAxis);
+    
+    const yAxis = axisRight(yScale)
+
+    svg.select(".y-axis")
+      .style("transform", "translateX(300px")
+      .call(yAxis);
 
     // xAxis(svg.select(".x-axis"));
 
@@ -54,6 +62,7 @@ function App() {
     <Fragment>
       <svg ref={svgRef}>
         <g className="x-axis"></g>
+        <g className="y-axis"></g>
       </svg>
       <br/>
       <button onClick={()=> setData(data.map(value => value + 5))}>Update Data</button>
