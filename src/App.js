@@ -7,7 +7,7 @@ import { select, axisBottom, axisRight, scaleLinear, scaleBand } from 'd3';
 
 function App() {
 
-  const [data, setData] = useState ([10, 20, 30, 45, 100, 60, 70])  //dynamic data
+  const [data, setData] = useState([25, 30, 45, 60, 10, 65, 75])  //dynamic data
   const svgRef = useRef();
 
   //called once when DOM elements is rendered
@@ -28,15 +28,16 @@ function App() {
       .range(["green", "orange", "red"])
       .clamp(true)
     
-    const xAxis = axisBottom(xScale)
-                    .ticks(data.length)
-                    // .tickFormat(index => index + 1);
+    //create x-axis
+      const xAxis = axisBottom(xScale)
+                      .ticks(data.length) // .tickFormat(index => index + 1);
 
     svg
       .select(".x-axis")
       .style("transform", "translateY(150px")
       .call(xAxis);
     
+    //create y-axis
     const yAxis = axisRight(yScale)
 
     svg
@@ -44,17 +45,26 @@ function App() {
       .style("transform", "translateX(300px")
       .call(yAxis);
 
-    // xAxis(svg.select(".x-axis"));
 
+    // draw the bars
     svg
       .selectAll(".bar")
       .data(data)
       .join("rect")
       .attr("class", "bar")
       .style("transform", "scale(1, -1")  //flip upside down y axis
-      .attr("x", (value, index) => xScale(index))
+      .attr("x", (value, index) => xScale(index)) //index refers to data "data"
       .attr("y", -150)                
       .attr("width", xScale.bandwidth())      //bandwidth = width of each bar
+      .on("mouseenter", (value, index) => {
+        svg
+          .selectAll(".tooltip")
+          .data([value])
+          .join("text")
+          .attr("class", "tooltip")
+          .text(value)
+          // .attr("x", xScale(index)); //index refers to data "[value]"
+      })
       .transition()
       .attr("fill", colorScale)
       .attr("height", value => 150 - yScale(value))                     //height = height of svg - actual height
@@ -77,6 +87,7 @@ function App() {
       <br/>
       <button onClick={()=> setData(data.map(value => value + 5))}>Update Data</button>
       <button onClick={()=> setData(data.filter(value => value < 35))}>Filter Data</button>
+      <button onClick={() => setData([...data, Math.round(Math.random() * 100)])}>Add data</button>
     </Fragment>
   );
 }
