@@ -19,8 +19,18 @@ function App() {
     svg.selectAll("circle")
       .data(data)
       .join(    //define what you want to do on the element created
-        enter => enter.append("circle").attr("class", "new"),
-        update => update.attr("class", "updated"),
+        enter => enter.append("circle")
+                      .attr("class", "new")
+                      .attr("r", value => value)        //radius
+                      .attr("cx", value => value * 2)
+                      .attr("cy", value => value * 2)
+                      .attr("stroke", "red"),           //default fill color is black
+
+        update => update.attr("class", "updated")
+                        .attr("r", value => value)        //radius
+                        .attr("cx", value => value * 2)
+                        .attr("cy", value => value * 2),
+                        
         exit => exit.remove()
       );
   }, [data]);
