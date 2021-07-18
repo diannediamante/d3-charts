@@ -7,7 +7,7 @@ import { select } from 'd3';
 
 function App() {
 
-  const [data, setData] = useState ([10, 20, 30, 45, 100, 30])
+  const [data, setData] = useState ([10, 20, 30, 45, 100, 30])  //dynamic data
   const svgRef = useRef();
 
   useEffect(() => {
@@ -18,14 +18,7 @@ function App() {
     //select all the circles find in svg then sync with data
     svg.selectAll("circle")
       .data(data)
-      .join(    //define what you want to do on the element created
-        enter => enter.append("circle").attr("class", "new"),
-
-        //update attributes
-        update => update.attr("class", "updated"),
-
-        exit => exit.remove()
-      )
+      .join("circle")
       .attr("r", value => value)        //radius
       .attr("cx", value => value * 2)
       .attr("cy", value => value * 2)
