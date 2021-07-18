@@ -1,27 +1,48 @@
-import React, { useRef, useEffect, Fragment } from 'react';
-// import './App.css';
+import React, { useRef, useEffect, useState } from 'react';
 import { select, axisBottom, axisRight, scaleLinear, scaleBand } from 'd3';
 
+const useResizeObserver = (ref) => {
+  const [dimensions, setDimensions] = useState(null);
+  useEffect(() => {
+    const observeTarget = ref.current;
+    const resizeObserver = new ResizeObserver((entries) => {
+      // console.log(entries)
+      //update dimensions
+      entries.forEach(entry => {
+        setDimensions(entry.contentRect)
+      })
+    })
+    resizeObserver.observe(observeTarget);
+    return () => {
+      resizeObserver.unobserve(observeTarget);
+    }
+  }, [ref])
+  return dimensions;
+}
 
 
 
 function Barchart({ data }) {
 
-//   const [data, setData] = useState([25, 30, 45, 60, 10, 65, 75])  //dynamic data
   const svgRef = useRef();
+  const wrapperRef = useRef();
+  const dimensions = useResizeObserver(wrapperRef)
 
   //called once when DOM elements is rendered
   useEffect(() => {
     const svg = select(svgRef.current);
+    console.log(dimensions);
+    
+    if (!dimensions) return;
 
     const xScale = scaleBand()
       .domain(data.map((value, index) => index))  //discrete, 0-0, 1-60..., should be explicit
-      .range([0, 300])
+      .range([0, dimensions.width])
       .padding(0.5)
     
     const yScale = scaleLinear()
       .domain([0, 150])
-      .range([150, 0])
+      .range([dimensions.height, 0])
 
     const colorScale = scaleLinear()
       .domain([75, 100, 150])
@@ -34,7 +55,7 @@ function Barchart({ data }) {
 
     svg
       .select(".x-axis")
-      .style("transform", "translateY(150px")
+      .style("transform", `translateY(${dimensions.height}px)`)
       .call(xAxis);
     
     //create y-axis
@@ -42,7 +63,7 @@ function Barchart({ data }) {
 
     svg
       .select(".y-axis")
-      .style("transform", "translateX(300px")
+      .style("transform", `translateX(${dimensions.width}px)`)
       .call(yAxis);
 
 
@@ -54,7 +75,7 @@ function Barchart({ data }) {
       .attr("class", "bar")
       .style("transform", "scale(1, -1")  //flip upside down y axis
       .attr("x", (value, index) => xScale(index)) //index refers to data "data"
-      .attr("y", -150)                
+      .attr("y", -dimensions.height)                
       .attr("width", xScale.bandwidth())      //bandwidth = width of each bar
       .on("mouseenter", (event, value) => {
         console.log(value)
@@ -74,7 +95,7 @@ function Barchart({ data }) {
       .on("mouseleave", () => svg.select(".tooltip").remove())
       .transition()
       .attr("fill", colorScale)
-      .attr("height", value => 150 - yScale(value))                     //height = height of svg - actual height
+      .attr("height", value => dimensions.height - yScale(value))                     //height = height of svg - actual height
       
 
 
@@ -82,17 +103,17 @@ function Barchart({ data }) {
 
 
 
-  }, [data]);
+  }, [data, dimensions]);
 
 
   return (
-    <Fragment>
+    <div ref={wrapperRef} style={{marginBottom: "2rem"}}>
       <svg ref={svgRef}>
         <g className="x-axis"></g>
         <g className="y-axis"></g>
       </svg>
       <br/>
-    </Fragment>
+    </div>
   );
 }
 
