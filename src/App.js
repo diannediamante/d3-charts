@@ -22,6 +22,10 @@ function App() {
     const yScale = scaleLinear()
       .domain([0, 150])
       .range([150, 0])
+
+    const colorScale = scaleLinear()
+      .domain([0, 150])
+      .range(["green", "red"])
     
     const xAxis = axisBottom(xScale)
                     .ticks(data.length)
@@ -46,6 +50,7 @@ function App() {
       .data(data)
       .join("rect")
       .attr("class", "bar")
+      .attr("fill", colorScale)
       .style("transform", "scale(1, -1")  //flip upside down y axis
       .attr("x", (value, index) => xScale(index))
       .attr("y", -150)                
