@@ -46,10 +46,13 @@ function App() {
       .data(data)
       .join("rect")
       .attr("class", "bar")
+      .style("transform", "scale(1, -1")  //flip upside down y axis
       .attr("x", (value, index) => xScale(index))
-      .attr("y", yScale)                
+      .attr("y", -150)                
       .attr("width", xScale.bandwidth())      //bandwidth = width of each bar
+      .transition()
       .attr("height", value => 150 - yScale(value))                     //height = height of svg - actual height
+      
 
 
 
