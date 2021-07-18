@@ -1,34 +1,42 @@
 import React, { useRef, useEffect, useState, Fragment } from 'react';
 import './App.css';
-import { select } from 'd3';
+import { select, line } from 'd3';
 
+//line = for line elements
 
-// const dats = [5, 25, 35, 15, 50, 11]
 
 function App() {
 
-  const [data, setData] = useState ([10, 20, 30, 45, 100, 60])  //dynamic data
+  const [data, setData] = useState ([10, 20, 30, 45, 100, 60, 70])  //dynamic data
   const svgRef = useRef();
 
   //called once when DOM elements is rendered
   useEffect(() => {
-    console.log(svgRef);
+    // console.log(svgRef);
     const svg = select(svgRef.current);
+    const myLine = line()
+      .x((value, index) => index * 50)
+      .y(value => value)
 
-    //select all the circles find in svg then sync with data
-    svg.selectAll("circle")
-      .data(data)
-      .join("circle")                   //enter, update, exit
-      .attr("r", value => value)        //radius
-      .attr("cx", value => value * 2)
-      .attr("cy", value => value * 2)
-      .attr("stroke", "red");           //default fill color is black;
+
+    svg.selectAll("path")
+      .data([data])
+      .join("path")
+      .attr("d", value => myLine(value))
+      .attr("fill", "none")
+      .attr("stroke", "blue")
+
+
   }, [data]);
 
 
   return (
     <Fragment>
-      <svg ref={svgRef}></svg>
+      <svg ref={svgRef}>
+
+      {/* collection of dots */}
+        {/* <path d="M0, 100 150, 150 200, 120" stroke="blue" fill="none"/>  */}
+      </svg>
       <br/>
       <button onClick={()=> setData(data.map(value => value + 5))}>Update Data</button>
       <button onClick={()=> setData(data.filter(value => value < 35))}>Filter Data</button>
