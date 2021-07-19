@@ -39,7 +39,7 @@ function GeoChart({ data, property }) {
             .selectAll(".country")
             .data(data.features)
             .join("path")
-            .on("click", (event, feature) => {
+            .on("click", feature => {
                 setSelectedCountry(selectedCountry === feature ? null : feature);
             })
             .attr("class", "country")
@@ -47,6 +47,18 @@ function GeoChart({ data, property }) {
             .duration(1000)
             .attr("fill", feature => colorScale(feature.properties[property]))
             .attr("d", feature => pathGenerator(feature))
+        
+        //render text
+        svg
+            .selectAll(".label")
+            .data([selectedCountry])
+            .join("text")
+            .attr("class", "label")
+            .text(
+                feature => feature && feature.properties.name + ": " + feature.properties[property].toLocaleString()
+            )
+            .attr("x", 10)
+            .attr("y", 25);
 
     }, [data, dimensions, property, selectedCountry]);
 
