@@ -13,6 +13,15 @@ function App() {
     console.log(svgRef);
     const svg = select(svgRef.current);
 
+    svg
+      .selectAll("circle")
+      .data(data)
+      .join("circle")
+      .attr("r", value => value)
+      .attr("cx", value => value * 2)
+      .attr("cy", value => value * 2)
+      .attr("stroke", "red")
+      .attr("fill", "none");
     
   }, [data]);
 
