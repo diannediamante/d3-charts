@@ -1,60 +1,30 @@
 
-import React, { useEffect, useRef, useState } from "react";
+import { tSParameterProperty } from "@babel/types";
+import React, { useState, Fragment } from "react";
 import "./App.css";
-import ml5 from "ml5";
-import GaugeChart from "./GaugeChart";
-import useInterval from "./useInterval";
+import GeoChart from './GeoChart'
+// import data from "./GeoChart.world.geo.json"
+// import ml5 from "ml5";
+// import GaugeChart from "./GaugeChart";
+// import useInterval from "./useInterval";
 
-let classifier;
+// let classifier;
 
 function App() {
-  const videoRef = useRef();
-  const [gaugeData, setGaugeData] = useState([0.5, 0.5]);
-  const [shouldClassify, setShouldClassify] = useState(false);
-
-  useEffect(() => {
-    classifier = ml5.imageClassifier("./my-model/model.json", () => {
-      navigator.mediaDevices
-        .getUserMedia({ video: true, audio: false })
-        .then(stream => {
-          videoRef.current.srcObject = stream;
-          videoRef.current.play();
-        });
-    });
-  }, []);
-
-  useInterval(() => {
-    if (classifier && shouldClassify) {
-      classifier.classify(videoRef.current, (error, results) => {
-        if (error) {
-          console.error(error);
-          return;
-        }
-        results.sort((a, b) => b.label.localeCompare(a.label));
-        setGaugeData(results.map(entry => entry.confidence));
-      });
-    }
-  }, 500);
+  const [propert, setProperty] = useState("pop_est");
 
   return (
-    <React.Fragment>
-      <h1>
-        Is Dianne there? <br />
-        <small>
-          [NO: {gaugeData[0].toFixed(2)}, YES: {gaugeData[1].toFixed(2)}]
-        </small>
-      </h1>
-      <GaugeChart data={gaugeData} />
-      <button onClick={() => setShouldClassify(!shouldClassify)}>
-        {shouldClassify ? "Stop classifying" : "Start classifying"}
-      </button>
-      <video
-        ref={videoRef}
-        style={{ transform: "scale(-1, 1)" }}
-        width="300"
-        height="150"
-      />
-    </React.Fragment>
+    <Fragment>
+      <h1>World Map with D3</h1>
+      <GeoChart data={data} property={property} />
+      <h2>Select property to highlight</h2>
+      <select value={property} onChange={event=> tSParameterProperty(event.target.value)}>
+        <option value="pop_est">Population</option>
+        <option value="name_len">Name Length</option>
+        <option value="gdp_md_est">GDP</option>
+      </select>
+
+    </Fragment>
   );
 }
 
