@@ -1,5 +1,5 @@
 
-import { tSParameterProperty } from "@babel/types";
+
 import React, { useState, Fragment } from "react";
 import "./App.css";
 import GeoChart from './GeoChart'
@@ -18,7 +18,7 @@ function App() {
       <h1>World Map with D3</h1>
       <GeoChart data={data} property={property} />
       <h2>Select property to highlight</h2>
-      <select value={property} onChange={event=> tSParameterProperty(event.target.value)}>
+      <select value={property} onChange={event => setProperty(event.target.value)}>
         <option value="pop_est">Population</option>
         <option value="name_len">Name Length</option>
         <option value="gdp_md_est">GDP</option>
