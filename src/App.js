@@ -4,6 +4,7 @@ import React, { useState, Fragment } from "react";
 import "./App.css";
 import GeoChart from './GeoChart'
 import data from "./custom.geo.json"
+// import data from "./ph.topojson"
 // import ml5 from "ml5";
 // import GaugeChart from "./GaugeChart";
 // import useInterval from "./useInterval";
