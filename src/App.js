@@ -1,6 +1,7 @@
 import React, { useState, Fragment } from 'react';
 import './App.css';
-import Barchart from './Barchart';
+import ml5 from "ml5";
+import GaugeChart from './GaugeChart';
 
 
 
