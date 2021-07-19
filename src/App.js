@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
 import ml5 from "ml5";
@@ -40,7 +41,7 @@ function App() {
       <h1>
         Is Dianne there? <br />
         <small>
-          [{gaugeData[0].toFixed(2)}, {gaugeData[1].toFixed(2)}]
+          [NO: {gaugeData[0].toFixed(2)}, YES: {gaugeData[1].toFixed(2)}]
         </small>
       </h1>
       <GaugeChart data={gaugeData} />

@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { select, arc, pie } from 'd3';
+import { select, arc, pie, interpolate } from 'd3';
 import useResizeObserver from './useResizeObserver';
 
 
@@ -33,11 +33,23 @@ function GaugeChart({ data }) {
       .data(instructions)
       .join("path")
       .attr("class", "slice")
-      .attr("fill", (instructions, index) => (index === 0? "#ffcc00" : "#eee" ))
+      .attr("fill", (instructions, index) => (index === 0? "#ffcc00" : "#00000" ))
+      // .attr("stroke", "black")
       .style("transform", 
         `translate(${dimensions.width / 2}px, ${dimensions.height}px)`
       )
-      .attr("d", instructions => arcGenerator(instructions))
+      .transition()
+      .attrTween("d", function(nextInstruction, index) {
+        const initialInstruction = pieGenerator([0, 1])[index];
+        const interpolator = interpolate(
+          this.lastInstruction || initialInstruction,
+          nextInstruction
+        );
+        this.lastInstruction = interpolator(1);
+        return function(t) {
+          return arcGenerator(interpolator(t))
+        };
+      })
 
 
 
